@@ -1,5 +1,6 @@
 ﻿using Hiwu.SpecificationPattern.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hiwu.SpecificationPattern.Generic
 {
@@ -66,6 +67,19 @@ namespace Hiwu.SpecificationPattern.Generic
             entities.ToList().ForEach(x => x.CreationDate = DateTime.UtcNow);
             await _context.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
             return entities;
+        }
+        #endregion
+
+        #region Any
+        public bool Any<TEntity>(Expression<Func<TEntity, bool>> anyExpression) where TEntity : class
+        {
+            return _context.Set<TEntity>().Any(anyExpression);
+        }
+
+        public async Task<bool> AnyAsync<TEntity>(Expression<Func<TEntity, bool>> anyExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            bool result = await _context.Set<TEntity>().AnyAsync(anyExpression, cancellationToken).ConfigureAwait(false);
+            return result;
         }
         #endregion
     }

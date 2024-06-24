@@ -1,4 +1,6 @@
-﻿namespace Hiwu.SpecificationPattern.Abstractions
+﻿using System.Linq.Expressions;
+
+namespace Hiwu.SpecificationPattern.Abstractions
 {
     public interface IRepository
     {
@@ -10,5 +12,8 @@
         Task<IEnumerable<TEntity>> AddRangeAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class;
         IEnumerable<TEntity> AddRange<TEntity, TPrimaryKey>(IEnumerable<TEntity> entities) where TEntity : EasyBaseEntity<TPrimaryKey>;
         Task<IEnumerable<TEntity>> AddRangeAsync<TEntity, TPrimaryKey>(IEnumerable<TEntity> entites, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>;
+
+        bool Any<TEntity>(Expression<Func<TEntity, bool>> anyExpression) where TEntity : class;
+        Task<bool> AnyAsync<TEntity>(Expression<Func<TEntity, bool>> anyExpression, CancellationToken cancellationToken = default) where TEntity : class;
     }
 }
