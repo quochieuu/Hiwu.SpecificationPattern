@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using AutoFilterer.Types;
+using System.Linq.Expressions;
 
 namespace Hiwu.SpecificationPattern.Abstractions
 {
@@ -15,5 +16,12 @@ namespace Hiwu.SpecificationPattern.Abstractions
 
         bool Any<TEntity>(Expression<Func<TEntity, bool>> anyExpression) where TEntity : class;
         Task<bool> AnyAsync<TEntity>(Expression<Func<TEntity, bool>> anyExpression, CancellationToken cancellationToken = default) where TEntity : class;
+
+        int Count<TEntity>() where TEntity : class;
+        int Count<TEntity>(Expression<Func<TEntity, bool>> whereExpression) where TEntity : class;
+        Task<int> Count<TEntity>(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default) where TEntity : class;
+        int Count<TEntity, TFilter>(TFilter filter) where TEntity : class where TFilter : FilterBase;
+        Task<int> CountAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
+        Task<int> CountAsync<TEntity, TFilter>(TFilter filter, CancellationToken cancellationToken = default) where TEntity : class where TFilter : FilterBase;
     }
 }

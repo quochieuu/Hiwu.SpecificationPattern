@@ -1,4 +1,6 @@
-﻿using Hiwu.SpecificationPattern.Abstractions;
+﻿using AutoFilterer.Extensions;
+using AutoFilterer.Types;
+using Hiwu.SpecificationPattern.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -80,6 +82,45 @@ namespace Hiwu.SpecificationPattern.Generic
         {
             bool result = await _context.Set<TEntity>().AnyAsync(anyExpression, cancellationToken).ConfigureAwait(false);
             return result;
+        }
+        #endregion
+
+        #region Count
+        public int Count<TEntity>() where TEntity : class
+        {
+            return _context.Set<TEntity>().Count();
+        }
+
+        public int Count<TEntity>(Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        {
+            return _context.Set<TEntity>().Where(whereExpression).Count();
+        }
+
+        public async Task<int> Count<TEntity>(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            int count = await _context.Set<TEntity>().Where(whereExpression).CountAsync(cancellationToken).ConfigureAwait(false);
+            return count;
+        }
+
+        public int Count<TEntity, TFilter>(TFilter filter)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            return _context.Set<TEntity>().ApplyFilter(filter).Count();
+        }
+
+        public async Task<int> CountAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class
+        {
+            int count = await _context.Set<TEntity>().CountAsync(cancellationToken).ConfigureAwait(false);
+            return count;
+        }
+
+        public async Task<int> CountAsync<TEntity, TFilter>(TFilter filter, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            int count = await _context.Set<TEntity>().ApplyFilter(filter).CountAsync(cancellationToken).ConfigureAwait(false);
+            return count;
         }
         #endregion
     }
