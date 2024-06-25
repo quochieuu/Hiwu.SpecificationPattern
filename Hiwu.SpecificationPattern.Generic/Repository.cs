@@ -2,6 +2,7 @@
 using AutoFilterer.Types;
 using Hiwu.SpecificationPattern.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Globalization;
 using System.Linq.Expressions;
 
@@ -210,6 +211,436 @@ namespace Hiwu.SpecificationPattern.Generic
             entity.ModificationDate = DateTime.UtcNow;
             _context.Entry(entity).State = EntityState.Modified;
             return Task.FromResult(entity);
+        }
+        #endregion
+
+        #region Soft delete
+        public void SoftDelete<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.IsDeleted = true;
+            entity.DeletionDate = DateTime.UtcNow;
+            Replace<TEntity, TPrimaryKey>(entity);
+        }
+
+        public void SoftDelete<TEntity, TPrimaryKey>(TPrimaryKey id) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            var entity = _context.Set<TEntity>().FirstOrDefault(GenerateExpression<TEntity>(id));
+            entity.IsDeleted = true;
+            entity.DeletionDate = DateTime.UtcNow;
+            Replace<TEntity, TPrimaryKey>(entity);
+        }
+
+        public async Task SoftDeleteAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.IsDeleted = true;
+            entity.DeletionDate = DateTime.UtcNow;
+            await ReplaceAsync<TEntity, TPrimaryKey>(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task SoftDeleteAsync<TEntity, TPrimaryKey>(TPrimaryKey id, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            var entity = await _context.Set<TEntity>().FirstOrDefaultAsync(GenerateExpression<TEntity>(id), cancellationToken).ConfigureAwait(false); ;
+            entity.IsDeleted = true;
+            entity.DeletionDate = DateTime.UtcNow;
+            await ReplaceAsync<TEntity, TPrimaryKey>(entity, cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Update 
+        public TEntity Update<TEntity>(TEntity entity) where TEntity : class
+        {
+            _context.Set<TEntity>().Update(entity);
+            return entity;
+        }
+
+        public TEntity Update<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.ModificationDate = DateTime.UtcNow;
+            _context.Set<TEntity>().Update(entity);
+            return entity;
+        }
+
+        public Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            _context.Set<TEntity>().Update(entity);
+            return Task.FromResult(entity);
+        }
+
+        public Task<TEntity> UpdateAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.ModificationDate = DateTime.UtcNow;
+            _context.Set<TEntity>().Update(entity);
+            return Task.FromResult(entity);
+        }
+        #endregion
+
+        #region Update range 
+        public IEnumerable<TEntity> UpdateRange<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
+        {
+            _context.Set<TEntity>().UpdateRange(entities);
+            return entities;
+        }
+
+        public IEnumerable<TEntity> UpdateRange<TEntity, TPrimaryKey>(IEnumerable<TEntity> entities) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entities.ToList().ForEach(a => a.ModificationDate = DateTime.UtcNow);
+            _context.Set<TEntity>().UpdateRange(entities);
+            return entities;
+        }
+
+        public async Task<IEnumerable<TEntity>> UpdateRangeAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            _context.Set<TEntity>().UpdateRange(entities);
+            return entities;
+        }
+
+        public async Task<IEnumerable<TEntity>> UpdateRangeAsync<TEntity, TPrimaryKey>(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entities.ToList().ForEach(a => a.ModificationDate = DateTime.UtcNow);
+            _context.Set<TEntity>().UpdateRange(entities);
+            return entities;
+        }
+        #endregion
+
+        #region Get/Queryable
+        public IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
+
+        public IQueryable<TEntity> GetQueryable<TEntity>(Expression<Func<TEntity, bool>> filter) where TEntity : class
+        {
+            return _context.Set<TEntity>().Where(filter);
+        }
+
+        private IQueryable<TEntity> FindQueryable<TEntity>(bool asNoTracking) where TEntity : class
+        {
+            var queryable = GetQueryable<TEntity>();
+            if (asNoTracking)
+            {
+                queryable = queryable.AsNoTracking();
+            }
+            return queryable;
+        }
+        #endregion
+
+        #region Get multiple
+        public List<TEntity> GetMultiple<TEntity>(bool asNoTracking) where TEntity : class
+        {
+            return FindQueryable<TEntity>(asNoTracking).ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity>(bool asNoTracking, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TProjected> GetMultiple<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            return FindQueryable<TEntity>(asNoTracking).Select(projectExpression).ToList();
+        }
+
+        public async Task<List<TProjected>> GetMultipleAsync<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).Select(projectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TEntity> GetMultiple<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        {
+            return FindQueryable<TEntity>(asNoTracking).Where(whereExpression).ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).Where(whereExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TProjected> GetMultiple<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            return FindQueryable<TEntity>(asNoTracking).Where(whereExpression).Select(projectExpression).ToList();
+        }
+
+        public async Task<List<TProjected>> GetMultipleAsync<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).Where(whereExpression).Select(projectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TEntity> GetMultiple<TEntity>(bool asNoTracking, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking);
+            queryable = includeExpression(queryable);
+            return queryable.ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity>(bool asNoTracking, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking);
+            queryable = includeExpression(queryable);
+            return await queryable.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TEntity> GetMultiple<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return queryable.ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return await queryable.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TProjected> GetMultiple<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return queryable.Select(projectExpression).ToList();
+        }
+
+        public async Task<List<TProjected>> GetMultipleAsync<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return await queryable.Select(projectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TEntity> GetMultiple<TEntity, TFilter>(bool asNoTracking, TFilter filter)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            return FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter).ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity, TFilter>(bool asNoTracking, TFilter filter, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            return await FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TEntity> GetMultiple<TEntity, TFilter>(bool asNoTracking, TFilter filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return queryable.ToList();
+        }
+
+        public async Task<List<TEntity>> GetMultipleAsync<TEntity, TFilter>(bool asNoTracking, TFilter filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return await queryable.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TProjected> GetMultiple<TEntity, TFilter, TProjected>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            return FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter).Select(projectExpression).ToList();
+        }
+
+        public async Task<List<TProjected>> GetMultipleAsync<TEntity, TFilter, TProjected>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            return await FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter).Select(projectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public List<TProjected> GetMultiple<TEntity, TFilter, TProjected>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return queryable.Select(projectExpression).ToList();
+        }
+
+        public async Task<List<TProjected>> GetMultipleAsync<TEntity, TFilter, TProjected>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return await queryable.Select(projectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Get single
+        public TEntity GetSingle<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            return queryable.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetSingleAsync<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            return await queryable.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TEntity GetSingle<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return queryable.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetSingleAsync<TEntity>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return await queryable.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetSingle<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            return FindQueryable<TEntity>(asNoTracking).Where(whereExpression).Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetSingleAsync<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).Where(whereExpression).Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetSingle<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return queryable.Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetSingleAsync<TEntity, TProjected>(bool asNoTracking, Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(whereExpression);
+            queryable = includeExpression(queryable);
+            return await queryable.Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TEntity GetSingle<TEntity, TFilter>(bool asNoTracking, TFilter filter)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            return queryable.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetSingleAsync<TEntity, TFilter>(bool asNoTracking, TFilter filter, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            return await queryable.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TEntity GetSingle<TEntity, TFilter>(bool asNoTracking, TFilter filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return queryable.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetSingleAsync<TEntity, TFilter>(bool asNoTracking, TFilter filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return await queryable.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetSingle<TEntity, TProjected, TFilter>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            return queryable.Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetSingleAsync<TEntity, TProjected, TFilter>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            return await queryable.Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetSingle<TEntity, TProjected, TFilter>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return queryable.Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetSingleAsync<TEntity, TProjected, TFilter>(bool asNoTracking, TFilter filter, Expression<Func<TEntity, TProjected>> projectExpression, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default)
+            where TEntity : class
+            where TFilter : FilterBase
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).ApplyFilter(filter);
+            queryable = includeExpression(queryable);
+            return await queryable.Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Get by id
+        public TEntity GetById<TEntity>(bool asNoTracking, object id) where TEntity : class
+        {
+            return _context.Set<TEntity>().FirstOrDefault(GenerateExpression<TEntity>(id));
+        }
+
+        public async Task<TEntity> GetByIdAsync<TEntity>(bool asNoTracking, object id, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await FindQueryable<TEntity>(asNoTracking).FirstOrDefaultAsync(GenerateExpression<TEntity>(id), cancellationToken).ConfigureAwait(false);
+        }
+
+        public TEntity GetById<TEntity>(bool asNoTracking, object id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            queryable = includeExpression(queryable);
+            return queryable.FirstOrDefault();
+        }
+
+        public async Task<TEntity> GetByIdAsync<TEntity>(bool asNoTracking, object id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            queryable = includeExpression(queryable);
+            return await queryable.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetById<TEntity, TProjected>(bool asNoTracking, object id, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            return queryable.Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetByIdAsync<TEntity, TProjected>(bool asNoTracking, object id, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            return await queryable.Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public TProjected GetById<TEntity, TProjected>(bool asNoTracking, object id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, Expression<Func<TEntity, TProjected>> projectExpression) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            queryable = includeExpression(queryable);
+            return queryable.Select(projectExpression).FirstOrDefault();
+        }
+
+        public async Task<TProjected> GetByIdAsync<TEntity, TProjected>(bool asNoTracking, object id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeExpression, Expression<Func<TEntity, TProjected>> projectExpression, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var queryable = FindQueryable<TEntity>(asNoTracking).Where(GenerateExpression<TEntity>(id));
+            queryable = includeExpression(queryable);
+            return await queryable.Select(projectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
