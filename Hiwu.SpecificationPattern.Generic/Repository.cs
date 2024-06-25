@@ -2,6 +2,7 @@
 using AutoFilterer.Types;
 using Hiwu.SpecificationPattern.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Linq.Expressions;
 
 namespace Hiwu.SpecificationPattern.Generic
@@ -123,5 +124,110 @@ namespace Hiwu.SpecificationPattern.Generic
             return count;
         }
         #endregion
+
+        #region Complete / Save changes
+        public void Complete()
+        {
+            _context.SaveChanges();
+        }
+
+        public async Task CompleteAsync(CancellationToken cancellationToken = default)
+        {
+            await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Hard delete
+        public void HardDelete<TEntity>(TEntity entity) where TEntity : class
+        {
+            _context.Set<TEntity>().Remove(entity);
+        }
+
+        public void HardDelete<TEntity>(object id) where TEntity : class
+        {
+            var entity = _context.Set<TEntity>().Find(id);
+            _context.Set<TEntity>().Remove(entity);
+        }
+
+        public void HardDelete<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            _context.Set<TEntity>().Remove(entity);
+        }
+
+        public void HardDelete<TEntity, TPrimaryKey>(TPrimaryKey id) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            var entity = _context.Set<TEntity>().FirstOrDefault(GenerateExpression<TEntity>(id));
+            _context.Set<TEntity>().Remove(entity);
+        }
+
+        public Task HardDeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            _context.Set<TEntity>().Remove(entity);
+            return Task.CompletedTask;
+        }
+
+        public async Task HardDeleteAsync<TEntity>(object id, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            var entity = await _context.Set<TEntity>().FirstOrDefaultAsync(GenerateExpression<TEntity>(id), cancellationToken).ConfigureAwait(false);
+            _context.Set<TEntity>().Remove(entity);
+        }
+
+        public Task HardDeleteAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            _context.Set<TEntity>().Remove(entity);
+            return Task.CompletedTask;
+        }
+
+        public async Task HardDeleteAsync<TEntity, TPrimaryKey>(TPrimaryKey id, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            var entity = await _context.Set<TEntity>().FirstOrDefaultAsync(GenerateExpression<TEntity>(id), cancellationToken).ConfigureAwait(false);
+            _context.Set<TEntity>().Remove(entity);
+        }
+        #endregion
+
+        #region Replace 
+        public TEntity Replace<TEntity>(TEntity entity) where TEntity : class
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            return entity;
+        }
+
+        public TEntity Replace<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.ModificationDate = DateTime.UtcNow;
+            _context.Entry(entity).State = EntityState.Modified;
+            return entity;
+        }
+
+        public Task<TEntity> ReplaceAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            return Task.FromResult(entity);
+        }
+
+        public Task<TEntity> ReplaceAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>
+        {
+            entity.ModificationDate = DateTime.UtcNow;
+            _context.Entry(entity).State = EntityState.Modified;
+            return Task.FromResult(entity);
+        }
+        #endregion
+
+        private Expression<Func<TEntity, bool>> GenerateExpression<TEntity>(object id)
+        {
+            var type = _context.Model.FindEntityType(typeof(TEntity));
+            string pk = type.FindPrimaryKey().Properties.Select(s => s.Name).FirstOrDefault();
+            Type pkType = type.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
+
+            object value = Convert.ChangeType(id, pkType, CultureInfo.InvariantCulture);
+
+            ParameterExpression pe = Expression.Parameter(typeof(TEntity), "entity");
+            MemberExpression me = Expression.Property(pe, pk);
+            ConstantExpression constant = Expression.Constant(value, pkType);
+            BinaryExpression body = Expression.Equal(me, constant);
+            Expression<Func<TEntity, bool>> expression = Expression.Lambda<Func<TEntity, bool>>(body, new[] { pe });
+
+            return expression;
+        }
     }
 }

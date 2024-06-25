@@ -23,5 +23,23 @@ namespace Hiwu.SpecificationPattern.Abstractions
         int Count<TEntity, TFilter>(TFilter filter) where TEntity : class where TFilter : FilterBase;
         Task<int> CountAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
         Task<int> CountAsync<TEntity, TFilter>(TFilter filter, CancellationToken cancellationToken = default) where TEntity : class where TFilter : FilterBase;
+
+        void Complete();
+        Task CompleteAsync(CancellationToken cancellationToken = default);
+
+        void HardDelete<TEntity>(TEntity entity) where TEntity : class;
+        void HardDelete<TEntity>(object id) where TEntity : class;
+        void HardDelete<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>;
+        void HardDelete<TEntity, TPrimaryKey>(TPrimaryKey id) where TEntity : EasyBaseEntity<TPrimaryKey>;
+        Task HardDeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
+        Task HardDeleteAsync<TEntity>(object id, CancellationToken cancellationToken = default) where TEntity : class;
+        Task HardDeleteAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>;
+        Task HardDeleteAsync<TEntity, TPrimaryKey>(TPrimaryKey id, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>;
+
+        TEntity Replace<TEntity>(TEntity entity) where TEntity : class;
+        TEntity Replace<TEntity, TPrimaryKey>(TEntity entity) where TEntity : EasyBaseEntity<TPrimaryKey>;
+        Task<TEntity> ReplaceAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity> ReplaceAsync<TEntity, TPrimaryKey>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : EasyBaseEntity<TPrimaryKey>;
+
     }
 }
