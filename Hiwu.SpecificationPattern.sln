@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Domain", "Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj", "{A7155758-74E0-4B4C-B019-BC4335721098}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Shared", "Hiwu.SpecificationPattern.Shared\Hiwu.SpecificationPattern.Shared.csproj", "{D472588E-EFD1-4B4A-8B36-58223E0B0574}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D472588E-EFD1-4B4A-8B36-58223E0B0574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D472588E-EFD1-4B4A-8B36-58223E0B0574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D472588E-EFD1-4B4A-8B36-58223E0B0574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D472588E-EFD1-4B4A-8B36-58223E0B0574}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
