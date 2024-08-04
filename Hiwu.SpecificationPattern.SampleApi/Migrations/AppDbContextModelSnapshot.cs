@@ -60,7 +60,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("386d95ac-57be-40d0-8d6d-36de7fc8d8f6"),
+                            Id = new Guid("e160e367-3688-44f5-ac2a-30f48c68950a"),
                             Content = "New fashion 2021",
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -70,7 +70,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bb8f7912-ded0-4378-9e06-b05c78246100"),
+                            Id = new Guid("96e9443c-aad5-4a0c-8593-755c4123481b"),
                             Content = "Adidas modern 2024",
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,

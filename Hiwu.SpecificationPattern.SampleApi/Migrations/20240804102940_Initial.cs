@@ -37,8 +37,8 @@ namespace Hiwu.SpecificationPattern.SampleApi.Migrations
                 columns: new[] { "Id", "Content", "CreationDate", "DeletionDate", "IsDeleted", "ModificationDate", "Name", "Price", "UrlImage" },
                 values: new object[,]
                 {
-                    { new Guid("386d95ac-57be-40d0-8d6d-36de7fc8d8f6"), "New fashion 2021", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Nike", 120000m, "nike.png" },
-                    { new Guid("bb8f7912-ded0-4378-9e06-b05c78246100"), "Adidas modern 2024", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Adidas", 120000m, "adidas.png" }
+                    { new Guid("96e9443c-aad5-4a0c-8593-755c4123481b"), "Adidas modern 2024", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Adidas", 120000m, "adidas.png" },
+                    { new Guid("e160e367-3688-44f5-ac2a-30f48c68950a"), "New fashion 2021", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Nike", 120000m, "nike.png" }
                 });
         }
 
