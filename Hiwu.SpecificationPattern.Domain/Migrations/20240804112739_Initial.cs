@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Hiwu.SpecificationPattern.SampleApi.Migrations
+namespace Hiwu.SpecificationPattern.Domain.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -37,8 +37,8 @@ namespace Hiwu.SpecificationPattern.SampleApi.Migrations
                 columns: new[] { "Id", "Content", "CreationDate", "DeletionDate", "IsDeleted", "ModificationDate", "Name", "Price", "UrlImage" },
                 values: new object[,]
                 {
-                    { new Guid("96e9443c-aad5-4a0c-8593-755c4123481b"), "Adidas modern 2024", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Adidas", 120000m, "adidas.png" },
-                    { new Guid("e160e367-3688-44f5-ac2a-30f48c68950a"), "New fashion 2021", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Nike", 120000m, "nike.png" }
+                    { new Guid("4f334cda-2daf-4298-8f5b-4a0789a4a98a"), "Adidas modern 2024", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Adidas", 120000m, "adidas.png" },
+                    { new Guid("bc3c7999-46b3-46cc-b41a-0c7fc92d4e59"), "New fashion 2021", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, null, "Nike", 120000m, "nike.png" }
                 });
         }
 

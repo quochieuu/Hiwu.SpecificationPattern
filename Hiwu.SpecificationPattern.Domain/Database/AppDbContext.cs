@@ -1,8 +1,8 @@
-﻿using Hiwu.SpecificationPattern.SampleApi.Entities;
+﻿using Hiwu.SpecificationPattern.Core.Entities;
 using Hiwu.SpecificationPattern.SampleApi.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hiwu.SpecificationPattern.SampleApi.Context
+namespace Hiwu.SpecificationPattern.Domain.Database
 {
     public class AppDbContext : DbContext
     {

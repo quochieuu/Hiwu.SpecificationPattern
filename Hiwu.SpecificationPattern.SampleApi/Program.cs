@@ -1,5 +1,5 @@
+using Hiwu.SpecificationPattern.Domain.Database;
 using Hiwu.SpecificationPattern.Generic;
-using Hiwu.SpecificationPattern.SampleApi.Context;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

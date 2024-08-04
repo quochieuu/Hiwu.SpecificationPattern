@@ -1,6 +1,6 @@
 ﻿using Hiwu.SpecificationPattern.Abstractions;
 
-namespace Hiwu.SpecificationPattern.SampleApi.Entities
+namespace Hiwu.SpecificationPattern.Core.Entities
 {
     public class Product : EasyBaseEntity<Guid>
     {

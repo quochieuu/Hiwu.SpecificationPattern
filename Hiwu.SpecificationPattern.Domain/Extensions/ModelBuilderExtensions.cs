@@ -1,4 +1,4 @@
-﻿using Hiwu.SpecificationPattern.SampleApi.Entities;
+﻿using Hiwu.SpecificationPattern.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hiwu.SpecificationPattern.SampleApi.Extensions
