@@ -11,9 +11,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register health checks
+builder.Services.AddHealthChecks();
+
+// Register the app context
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
                             builder.Configuration.GetConnectionString("ConnectionString")));
 
+// Register repository
 builder.Services.ApplyHiwuRepository<AppDbContext>();
 
 var app = builder.Build();
@@ -24,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapHealthChecks("/health");
 
 app.UseAuthorization();
 

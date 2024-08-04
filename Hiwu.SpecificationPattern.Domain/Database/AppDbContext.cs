@@ -18,14 +18,7 @@ namespace Hiwu.SpecificationPattern.Domain.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Data seeding
             modelBuilder.Seed();
-            //base.OnModelCreating(modelBuilder);
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //}
     }
 }
