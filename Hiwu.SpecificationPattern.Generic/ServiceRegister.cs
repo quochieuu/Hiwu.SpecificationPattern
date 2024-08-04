@@ -6,7 +6,8 @@ namespace Hiwu.SpecificationPattern.Generic
 {
     public static class ServiceRegister
     {
-        public static IServiceCollection ApplyEasyRepository<TDbContext>(this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Transient) where TDbContext : DbContext
+        public static IServiceCollection ApplyHiwuRepository<TDbContext>(this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Transient) 
+            where TDbContext : DbContext
         {
             services.Add(new ServiceDescriptor(
                 typeof(IRepository),

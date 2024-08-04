@@ -1,3 +1,4 @@
+using Hiwu.SpecificationPattern.Generic;
 using Hiwu.SpecificationPattern.SampleApi.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
                             builder.Configuration.GetConnectionString("ConnectionString")));
+
+builder.Services.ApplyHiwuRepository<AppDbContext>();
 
 var app = builder.Build();
 

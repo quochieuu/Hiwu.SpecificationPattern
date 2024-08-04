@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hiwu.SpecificationPattern.Abstractions\Hiwu.SpecificationPattern.Abstractions.csproj" />
+    <ProjectReference Include="..\Hiwu.SpecificationPattern.Generic\Hiwu.SpecificationPattern.Generic.csproj" />
   </ItemGroup>
 
 </Project>
