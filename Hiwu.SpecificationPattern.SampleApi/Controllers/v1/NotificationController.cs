@@ -3,9 +3,12 @@ using Hiwu.SpecificationPattern.SignalR.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Hiwu.SpecificationPattern.SampleApi.Controllers
+namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
 {
-    public class NotificationController : BaseApiController
+    [ApiController]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/notification")]
+    public class NotificationController : ControllerBase
     {
         private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IUnitOfWork _unitOfWork;

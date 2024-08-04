@@ -4,16 +4,19 @@ using Hiwu.SpecificationPattern.Core.Entities;
 using Hiwu.SpecificationPattern.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hiwu.SpecificationPattern.SampleApi.Controllers
+namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
 {
-    public class ProductController : BaseApiController
+    [ApiController]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/product")]
+    public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork; 
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 

@@ -1,10 +1,11 @@
 using Hiwu.SpecificationPattern.Core;
+using Hiwu.SpecificationPattern.Core.Middlewares;
 using Hiwu.SpecificationPattern.Domain.Database;
 using Hiwu.SpecificationPattern.Generic;
 using Hiwu.SpecificationPattern.SignalR;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,20 @@ builder.Services.AddSignalRServices();
 // Register core layer
 builder.Services.AddApplicationLayer();
 
+// Register and configure API versioning in the ASP.NET Core service container
+builder.Services.AddApiVersioning(config =>
+{
+    // Set the default API version to 1.0
+    config.DefaultApiVersion = new ApiVersion(1, 0);
+
+    // Assume the default version (1.0) if no version is specified in the request
+    config.AssumeDefaultVersionWhenUnspecified = true;
+
+    // Report the API versions supported by the API in the response headers
+    config.ReportApiVersions = true;
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +56,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapHealthChecks("/health");
+
+app.UseMiddleware<AppMiddleware>();
 
 app.UseRouting();
 
