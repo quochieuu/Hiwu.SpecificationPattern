@@ -1,5 +1,7 @@
 using Hiwu.SpecificationPattern.Domain.Database;
 using Hiwu.SpecificationPattern.Generic;
+using Hiwu.SpecificationPattern.SignalR;
+using Hiwu.SpecificationPattern.SignalR.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
 // Register repository
 builder.Services.ApplyHiwuRepository<AppDbContext>();
 
+// Register signalr
+builder.Services.AddSignalRServices();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +36,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapHealthChecks("/health");
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/chathub");
+    endpoints.MapHub<NotificationHub>("/notificationhub");
+
+    endpoints.MapControllers();
+});
 
 app.UseAuthorization();
 
