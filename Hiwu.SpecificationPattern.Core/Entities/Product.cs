@@ -8,5 +8,6 @@ namespace Hiwu.SpecificationPattern.Core.Entities
         public decimal Price { get; set; }
         public string? Content { get; set; }
         public string? UrlImage { get; set; }
+        public Guid? CategoryId { get; set; }
     }
 }

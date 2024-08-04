@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hiwu.SpecificationPattern.Core.DataTransferObjects.Product;
 using Hiwu.SpecificationPattern.Core.Entities;
+using Hiwu.SpecificationPattern.Core.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.Generic;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,13 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IProductRepository _productRepository; // @TODO: remove
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
@@ -37,6 +40,14 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
             var result = await _unitOfWork.Repository.AddRangeAsync(products);
 
             await _unitOfWork.Repository.CompleteAsync();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("product-w-category")]
+        public async Task<IActionResult> ProductCategoriesGet()
+        {
+            var result = await _productRepository.GetProductsWithCategoryAsync();
             return Ok(result);
         }
     }

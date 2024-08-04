@@ -22,10 +22,56 @@ namespace Hiwu.SpecificationPattern.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Hiwu.SpecificationPattern.Core.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModificationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0cfee3af-f0f7-44d5-8552-8fe8062571bc"),
+                            CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Fashion"
+                        },
+                        new
+                        {
+                            Id = new Guid("38a8bee1-6bc8-45a0-8e21-81aabadceae2"),
+                            CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Shoes"
+                        });
+                });
+
             modelBuilder.Entity("Hiwu.SpecificationPattern.Core.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Content")
@@ -60,17 +106,19 @@ namespace Hiwu.SpecificationPattern.Domain.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bc3c7999-46b3-46cc-b41a-0c7fc92d4e59"),
-                            Content = "New fashion 2021",
+                            Id = new Guid("cef6e5e9-f72c-43c4-b082-f0845bc6561e"),
+                            CategoryId = new Guid("0cfee3af-f0f7-44d5-8552-8fe8062571bc"),
+                            Content = "New fashion 2024",
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            Name = "Nike",
+                            Name = "Summer T-shirt fashion 2024",
                             Price = 120000m,
-                            UrlImage = "nike.png"
+                            UrlImage = "summer.png"
                         },
                         new
                         {
-                            Id = new Guid("4f334cda-2daf-4298-8f5b-4a0789a4a98a"),
+                            Id = new Guid("9e95d074-87b2-4f08-b497-ab76c048296c"),
+                            CategoryId = new Guid("38a8bee1-6bc8-45a0-8e21-81aabadceae2"),
                             Content = "Adidas modern 2024",
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,

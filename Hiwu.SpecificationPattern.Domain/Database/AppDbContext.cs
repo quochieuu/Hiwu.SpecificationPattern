@@ -15,6 +15,7 @@ namespace Hiwu.SpecificationPattern.Domain.Database
         }
 
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

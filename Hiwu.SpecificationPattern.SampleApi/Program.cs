@@ -1,6 +1,8 @@
 using Hiwu.SpecificationPattern.Core;
+using Hiwu.SpecificationPattern.Core.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.Core.Middlewares;
 using Hiwu.SpecificationPattern.Domain.Database;
+using Hiwu.SpecificationPattern.Domain.Repositories;
 using Hiwu.SpecificationPattern.Generic;
 using Hiwu.SpecificationPattern.SignalR;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
@@ -21,7 +23,7 @@ builder.Services.AddSwaggerGen(swg =>
     {
         Version = "v1",
         Title = "Hiwu.SpecificationPattern.SampleAPI",
-        Description = "This is sample API use PosgresQL.",
+        Description = "This is sample API use PostgreSQL.",
         Contact = new OpenApiContact
         {
             Name = "Hiwu",
@@ -65,6 +67,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
 
 // Register repository
 builder.Services.ApplyHiwuRepository<AppDbContext>();
+
+// @TODO: remove later, use unit of work only
+builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
 
 // Register signalr
 builder.Services.AddSignalRServices();
