@@ -18,7 +18,7 @@ namespace Hiwu.SpecificationPattern.Persistence.Repositories
         public async Task<IEnumerable<ProductCategoryDto>> GetProductsWithCategoryAsync()
         {
             return await _context.Database.GetDbConnection()
-                .QueryAsync<ProductCategoryDto>("SELECT * FROM View_HIWU_ProductCategoryView");
+                .QueryAsync<ProductCategoryDto>("SELECT * FROM \"View_HIWU_ProductCategoryView\"");
         }
     }
 }

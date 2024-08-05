@@ -24,7 +24,8 @@ namespace Hiwu.SpecificationPattern.Generic
                 serviceProvider =>
                 {
                     var repository = serviceProvider.GetService<IRepository>();
-                    return new UnitOfWork(repository);
+                    var productRepository = serviceProvider.GetService<IProductRepository>();
+                    return new UnitOfWork(repository, productRepository);
                 },
                 serviceLifetime));
             return services;

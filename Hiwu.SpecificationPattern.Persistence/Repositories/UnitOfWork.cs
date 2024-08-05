@@ -7,10 +7,12 @@ namespace Hiwu.SpecificationPattern.Persistence.Repositories
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(IRepository repository)
+        public UnitOfWork(IRepository repository, IProductRepository productRepository)
         {
             Repository = repository;
+            ProductRepository = productRepository;
         }
         public IRepository Repository { get; }
+        public IProductRepository ProductRepository { get; }
     }
 }

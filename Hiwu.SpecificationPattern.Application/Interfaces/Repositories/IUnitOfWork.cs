@@ -6,5 +6,6 @@
     public interface IUnitOfWork
     {
         IRepository Repository { get; }
+        IProductRepository ProductRepository { get; }
     }
 }

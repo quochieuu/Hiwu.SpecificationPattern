@@ -13,13 +13,11 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IProductRepository _productRepository; // @TODO: remove
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _productRepository = productRepository;
         }
 
         [HttpGet]
@@ -46,7 +44,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
         [Route("product-w-category")]
         public async Task<IActionResult> ProductCategoriesGet()
         {
-            var result = await _productRepository.GetProductsWithCategoryAsync();
+            var result = await _unitOfWork.ProductRepository.GetProductsWithCategoryAsync();
             return Ok(result);
         }
     }
