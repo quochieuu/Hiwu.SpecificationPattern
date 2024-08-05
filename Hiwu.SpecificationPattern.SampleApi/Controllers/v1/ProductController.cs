@@ -47,5 +47,14 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
             var result = await _unitOfWork.ProductRepository.GetProductsWithCategoryAsync();
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("products-price-range")]
+        public async Task<IActionResult> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
+        {
+            var products = await _unitOfWork.ProductRepository.GetProductsByPriceRangeAsync(minPrice, maxPrice);
+            return Ok(products);
+        }
+
     }
 }
