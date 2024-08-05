@@ -1,9 +1,9 @@
-using Hiwu.SpecificationPattern.Core;
-using Hiwu.SpecificationPattern.Core.Interfaces.Repositories;
+using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.Core.Middlewares;
-using Hiwu.SpecificationPattern.Domain.Database;
-using Hiwu.SpecificationPattern.Domain.Repositories;
 using Hiwu.SpecificationPattern.Generic;
+using Hiwu.SpecificationPattern.Persistence.Database;
+using Hiwu.SpecificationPattern.Persistence.Repositories;
+using Hiwu.SpecificationPattern.Application;
 using Hiwu.SpecificationPattern.SignalR;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
 using Microsoft.AspNetCore.Mvc;

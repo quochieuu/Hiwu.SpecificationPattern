@@ -1,4 +1,4 @@
-﻿using Hiwu.SpecificationPattern.Generic;
+﻿using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;

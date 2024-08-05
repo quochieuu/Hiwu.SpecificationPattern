@@ -1,4 +1,4 @@
-﻿using Hiwu.SpecificationPattern.Generic;
+﻿using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace Hiwu.SpecificationPattern.SignalR.Hubs

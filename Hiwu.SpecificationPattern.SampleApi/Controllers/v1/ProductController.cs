@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Hiwu.SpecificationPattern.Core.DataTransferObjects.Product;
-using Hiwu.SpecificationPattern.Core.Entities;
-using Hiwu.SpecificationPattern.Core.Interfaces.Repositories;
-using Hiwu.SpecificationPattern.Generic;
+using Hiwu.SpecificationPattern.Application.DataTransferObjects.Product;
+using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
+using Hiwu.SpecificationPattern.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1

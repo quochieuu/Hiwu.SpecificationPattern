@@ -25,9 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hiwu.SpecificationPattern.Abstractions\Hiwu.SpecificationPattern.Abstractions.csproj" />
     <ProjectReference Include="..\Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj" />
-    <ProjectReference Include="..\Hiwu.SpecificationPattern.Generic\Hiwu.SpecificationPattern.Generic.csproj" />
     <ProjectReference Include="..\Hiwu.SpecificationPattern.SignalR\Hiwu.SpecificationPattern.SignalR.csproj" />
   </ItemGroup>
 

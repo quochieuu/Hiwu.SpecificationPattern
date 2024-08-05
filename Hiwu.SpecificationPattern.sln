@@ -5,17 +5,21 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.SampleApi", "Hiwu.SpecificationPattern.SampleApi\Hiwu.SpecificationPattern.SampleApi.csproj", "{BBCF1672-3A63-421B-B28F-ADA752F913DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Abstractions", "Hiwu.SpecificationPattern.Abstractions\Hiwu.SpecificationPattern.Abstractions.csproj", "{8FB9F4A8-3786-493A-BA1A-78F5EA6A7F17}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Generic", "Hiwu.SpecificationPattern.Generic\Hiwu.SpecificationPattern.Generic.csproj", "{930A05C5-EEE1-45BD-9D5D-C67550BB0FF9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Core", "Hiwu.SpecificationPattern.Core\Hiwu.SpecificationPattern.Core.csproj", "{696F591E-8286-48C6-90D9-9860540EB346}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Domain", "Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj", "{A7155758-74E0-4B4C-B019-BC4335721098}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Shared", "Hiwu.SpecificationPattern.Shared\Hiwu.SpecificationPattern.Shared.csproj", "{D472588E-EFD1-4B4A-8B36-58223E0B0574}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.SignalR", "Hiwu.SpecificationPattern.SignalR\Hiwu.SpecificationPattern.SignalR.csproj", "{957B14D8-365C-448A-915C-4C842A100938}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{88D7339B-D38A-4B61-BF55-6BC127D0EAA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Application", "Hiwu.SpecificationPattern.Application\Hiwu.SpecificationPattern.Application.csproj", "{3F357DE7-DBB5-458E-8405-EA09748945F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Persistence", "Hiwu.SpecificationPattern.Persistence\Hiwu.SpecificationPattern.Persistence.csproj", "{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{40F7A338-16C8-470E-A3B9-A34C8E401213}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,18 +31,6 @@ Global
 		{BBCF1672-3A63-421B-B28F-ADA752F913DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBCF1672-3A63-421B-B28F-ADA752F913DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBCF1672-3A63-421B-B28F-ADA752F913DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FB9F4A8-3786-493A-BA1A-78F5EA6A7F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FB9F4A8-3786-493A-BA1A-78F5EA6A7F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FB9F4A8-3786-493A-BA1A-78F5EA6A7F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FB9F4A8-3786-493A-BA1A-78F5EA6A7F17}.Release|Any CPU.Build.0 = Release|Any CPU
-		{930A05C5-EEE1-45BD-9D5D-C67550BB0FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{930A05C5-EEE1-45BD-9D5D-C67550BB0FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{930A05C5-EEE1-45BD-9D5D-C67550BB0FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{930A05C5-EEE1-45BD-9D5D-C67550BB0FF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{696F591E-8286-48C6-90D9-9860540EB346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{696F591E-8286-48C6-90D9-9860540EB346}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{696F591E-8286-48C6-90D9-9860540EB346}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{696F591E-8286-48C6-90D9-9860540EB346}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7155758-74E0-4B4C-B019-BC4335721098}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,9 +43,25 @@ Global
 		{957B14D8-365C-448A-915C-4C842A100938}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{957B14D8-365C-448A-915C-4C842A100938}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{957B14D8-365C-448A-915C-4C842A100938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F357DE7-DBB5-458E-8405-EA09748945F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F357DE7-DBB5-458E-8405-EA09748945F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F357DE7-DBB5-458E-8405-EA09748945F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F357DE7-DBB5-458E-8405-EA09748945F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BBCF1672-3A63-421B-B28F-ADA752F913DE} = {40F7A338-16C8-470E-A3B9-A34C8E401213}
+		{A7155758-74E0-4B4C-B019-BC4335721098} = {88D7339B-D38A-4B61-BF55-6BC127D0EAA5}
+		{D472588E-EFD1-4B4A-8B36-58223E0B0574} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
+		{957B14D8-365C-448A-915C-4C842A100938} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
+		{3F357DE7-DBB5-458E-8405-EA09748945F5} = {88D7339B-D38A-4B61-BF55-6BC127D0EAA5}
+		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {009153D6-D923-4A27-881C-6F6042BD803F}

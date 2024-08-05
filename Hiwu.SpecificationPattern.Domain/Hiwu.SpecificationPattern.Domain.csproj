@@ -17,8 +17,4 @@
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Hiwu.SpecificationPattern.Core\Hiwu.SpecificationPattern.Core.csproj" />
-	</ItemGroup>
-
 </Project>
