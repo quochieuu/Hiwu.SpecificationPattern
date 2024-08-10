@@ -8,48 +8,62 @@ using System.Net;
 
 namespace Hiwu.SpecificationPattern.Caching.Redis
 {
+    /// <summary>
+    /// Manages the Redis connection and provides Redis-related operations, including distributed locking using RedLock.
+    /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     {
-        private readonly RedisSettings _config;
-        private readonly object _lock = new object();
+        private readonly RedisSettings _redisSettings;
+        private readonly object _connectionLock = new object();
         private volatile ConnectionMultiplexer _connection;
         private readonly Lazy<string> _connectionString;
         private volatile RedLockFactory _redisLockFactory;
 
-        public RedisConnectionWrapper(RedisSettings config)
+        public RedisConnectionWrapper(RedisSettings redisSettings)
         {
-            _config = config;
+            _redisSettings = redisSettings;
             _connectionString = new Lazy<string>(GetConnectionString);
             _redisLockFactory = CreateRedisLockFactory();
         }
 
+        /// <summary>
+        /// Retrieves the Redis connection string from the configuration.
+        /// </summary>
+        /// <returns></returns>
         protected string GetConnectionString()
         {
-            return _config.RedisConnectionString;
+            return _redisSettings.RedisConnectionString;
         }
 
-
+        /// <summary>
+        /// Gets the current Redis connection, creating a new one if necessary.
+        /// </summary>
+        /// <returns></returns>
         protected ConnectionMultiplexer GetConnection()
         {
             if (_connection != null && _connection.IsConnected) return _connection;
 
-            lock (_lock)
+            lock (_connectionLock)
             {
                 if (_connection != null && _connection.IsConnected) return _connection;
 
-                //Connection disconnected. Disposing connection...
+                // Connection disconnected. Disposing connection...
                 _connection?.Dispose();
 
-                //Creating new instance of Redis Connection
+                // Creating new instance of Redis Connection
                 _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
             }
 
             return _connection;
         }
 
+        /// <summary>
+        /// Creates a RedLockFactory instance to manage distributed locks.
+        /// </summary>
+        /// <returns></returns>
         protected RedLockFactory CreateRedisLockFactory()
         {
-            //get RedLock endpoints
+            // Get RedLock endpoints
             var configurationOptions = ConfigurationOptions.Parse(_connectionString.Value);
             var redLockEndPoints = GetEndPoints().Select(endPoint => new RedLockEndPoint
             {
@@ -62,24 +76,43 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
                 SyncTimeout = configurationOptions.SyncTimeout
             }).ToList();
 
-            //create RedLock factory to use RedLock distributed lock algorithm
+            // Create RedLock factory to use RedLock distributed lock algorithm
             return RedLockFactory.Create(redLockEndPoints);
         }
 
+        /// <summary>
+        /// Retrieves a Redis database by its identifier.
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
         public IDatabase GetDatabase(int db)
         {
             return GetConnection().GetDatabase(db);
         }
 
+        /// <summary>
+        /// Retrieves a Redis server instance by its endpoint.
+        /// </summary>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
         public IServer GetServer(EndPoint endPoint)
         {
             return GetConnection().GetServer(endPoint);
         }
+
+        /// <summary>
+        /// Retrieves all endpoints of the connected Redis servers.
+        /// </summary>
+        /// <returns></returns>
         public EndPoint[] GetEndPoints()
         {
             return GetConnection().GetEndPoints();
         }
 
+        /// <summary>
+        /// Flushes the specified Redis database on all connected servers.
+        /// </summary>
+        /// <param name="db"></param>
         public void FlushDatabase(RedisDatabaseNumber db)
         {
             var endPoints = GetEndPoints();
@@ -90,28 +123,38 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
             }
         }
 
+        /// <summary>
+        /// Performs an action with a distributed lock.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="expirationTime"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
-            //use RedLock library
+            // Use RedLock library
             using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
             {
-                //ensure that lock is acquired
+                // Ensure that lock is acquired
                 if (!redisLock.IsAcquired)
                     return false;
 
-                //perform action
+                // Perform action
                 action();
 
                 return true;
             }
         }
 
+        /// <summary>
+        /// Disposes of the resources used by the <see cref="RedisConnectionWrapper"/>.
+        /// </summary>
         public void Dispose()
         {
-            //dispose ConnectionMultiplexer
+            // Dispose ConnectionMultiplexer
             _connection?.Dispose();
 
-            //dispose RedLock factory
+            // Dispose RedLock factory
             _redisLockFactory?.Dispose();
         }
     }

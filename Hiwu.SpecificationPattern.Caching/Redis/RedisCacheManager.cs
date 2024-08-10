@@ -7,60 +7,72 @@ using System.Net;
 
 namespace Hiwu.SpecificationPattern.Caching.Redis
 {
-    public partial class RedisCacheManager : ICacheManager
+    /// <summary>
+    /// Manages caching using Redis as the backend store.
+    /// </summary>
+    public partial class RedisCacheManager : ICacheManager, IDisposable
     {
-        private readonly IRedisConnectionWrapper _connectionWrapper;
-        private readonly IDatabase _db;
-        private readonly RedisSettings _config;
+        private readonly IRedisConnectionWrapper _redisConnectionWrapper;
+        private readonly IDatabase _database;
+        private readonly RedisSettings _redisSettings;
 
-
-        public RedisCacheManager(IRedisConnectionWrapper connectionWrapper, RedisSettings config)
+        public RedisCacheManager(IRedisConnectionWrapper redisConnectionWrapper, RedisSettings redisSettings)
         {
-            _config = config;
+            _redisSettings = redisSettings;
 
-            if (string.IsNullOrEmpty(_config.RedisConnectionString))
-            {
-                throw new Exception("Redis connection string is empty");
-            }
+            if (string.IsNullOrEmpty(_redisSettings.RedisConnectionString))
+                throw new ArgumentException("Redis connection string is empty", nameof(_redisSettings.RedisConnectionString));
 
-            _connectionWrapper = connectionWrapper;
-            _db = _connectionWrapper.GetDatabase(_config.RedisDatabaseId ?? (int)RedisDatabaseNumber.Cache);
+            _redisConnectionWrapper = redisConnectionWrapper;
+            _database = _redisConnectionWrapper.GetDatabase(_redisSettings.RedisDatabaseId ?? (int)RedisDatabaseNumber.Cache);
         }
 
+        /// <summary>
+        /// Retrieves all keys matching the specified prefix.
+        /// </summary>
+        /// <param name="endPoint"></param>
+        /// <param name="prefix"></param>
+        /// <returns></returns>
         protected virtual IEnumerable<RedisKey> GetKeys(EndPoint endPoint, string prefix = null)
         {
-            var server = _connectionWrapper.GetServer(endPoint);
+            var server = _redisConnectionWrapper.GetServer(endPoint);
 
-            var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
-
-            keys = keys.Where(key => !key.ToString().Equals(_config.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
+            var keys = server.Keys(_database.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*")
+                        .Where(key => !key.ToString().Equals(_redisSettings.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
             return keys;
         }
 
+        /// <summary>
+        /// Retrieves the cached item asynchronously.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
         protected virtual async Task<T> GetAsync<T>(string key)
         {
-            //get serialized item from cache
-            var serializedItem = await _db.StringGetAsync(key);
-            if (!serializedItem.HasValue)
-                return default(T);
-
-            //deserialize item
-            var item = JsonConvert.DeserializeObject<T>(serializedItem);
-            if (item == null)
-                return default(T);
-
-            return item;
+            var serializedItem = await _database.StringGetAsync(key);
+            return !serializedItem.HasValue ? default : JsonConvert.DeserializeObject<T>(serializedItem);
         }
 
+        /// <summary>
+        /// Checks whether the specified cache key exists asynchronously.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         protected virtual async Task<bool> IsSetAsync(string key)
         {
-            return await _db.KeyExistsAsync(key);
+            return await _database.KeyExistsAsync(key);
         }
 
+        /// <summary>
+        /// Retrieves the cached string asynchronously.
+        /// </summary>
+        /// <param name="cacheKey"></param>
+        /// <returns></returns>
         public async Task<string> GetAsync(string cacheKey)
         {
-            var cachedResponse = await _db.StringGetAsync(cacheKey);
+            var cachedResponse = await _database.StringGetAsync(cacheKey);
 
             if (cachedResponse.IsNullOrEmpty)
             {
@@ -70,6 +82,14 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
             return cachedResponse;
         }
 
+        /// <summary>
+        /// Retrieves the cached item asynchronously, or adds it if it does not exist.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="acquire"></param>
+        /// <param name="cacheTime"></param>
+        /// <returns></returns>
         public async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire, int? cacheTime = null)
         {
             //item already is in cache, so return it
@@ -80,123 +100,126 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
             var result = await acquire();
 
             //and set in cache (if cache time is defined)
-            if ((cacheTime ?? _config.CacheTime) > 0)
-                await SetAsync(key, result, cacheTime ?? _config.CacheTime);
+            if ((cacheTime ?? _redisSettings.CacheTime) > 0)
+                await SetAsync(key, result, cacheTime ?? _redisSettings.CacheTime);
 
             return result;
         }
 
+        /// <summary>
+        /// Retrieves the cached item.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual T Get<T>(string key)
         {
-
-            //get serialized item from cache
-            var serializedItem = _db.StringGet(key);
-            if (!serializedItem.HasValue)
-                return default(T);
-
-            //deserialize item
-            var item = JsonConvert.DeserializeObject<T>(serializedItem);
-            if (item == null)
-                return default(T);
-
-
-            return item;
+            var serializedItem = _database.StringGet(key);
+            return !serializedItem.HasValue ? default : JsonConvert.DeserializeObject<T>(serializedItem);
         }
 
+        /// <summary>
+        /// Retrieves the cached item, or adds it if it does not exist.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="acquire"></param>
+        /// <param name="cacheTime"></param>
+        /// <returns></returns>
         public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            //item already is in cache, so return it
-            if (IsSet(key))
-                return Get<T>(key);
+            if (IsSet(key)) return Get<T>(key);
 
-            //or create it using passed function
             var result = acquire();
 
-            //and set in cache (if cache time is defined)
-            if ((cacheTime ?? _config.CacheTime) > 0)
-                Set(key, result, cacheTime ?? _config.CacheTime);
+            if ((cacheTime ?? _redisSettings.CacheTime) > 0)
+                Set(key, result, cacheTime ?? _redisSettings.CacheTime);
 
             return result;
         }
 
+        /// <summary>
+        /// Sets the specified item in the cache asynchronously.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheTime"></param>
+        /// <returns></returns>
         public async Task SetAsync(string key, object data, int cacheTime)
         {
-            if (data == null)
-                return;
+            if (data == null) return;
 
-            //set cache time
             var expiresIn = TimeSpan.FromMinutes(cacheTime);
-
-            //serialize item
             var serializedItem = JsonConvert.SerializeObject(data);
-
-            //and set it to cache
-            await _db.StringSetAsync(key, serializedItem, expiresIn);
+            await _database.StringSetAsync(key, serializedItem, expiresIn);
         }
 
+        /// <summary>
+        /// Sets the specified item in the cache.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data"></param>
+        /// <param name="cacheTime"></param>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            if (data == null)
-                return;
+            if (data == null) return;
 
-            //set cache time
             var expiresIn = TimeSpan.FromMinutes(cacheTime);
-
-            //serialize item
             var serializedItem = JsonConvert.SerializeObject(data);
-
-            //and set it to cache
-            _db.StringSet(key, serializedItem, expiresIn);
+            _database.StringSet(key, serializedItem, expiresIn);
         }
 
+        /// <summary>
+        /// Checks whether the specified cache key exists.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual bool IsSet(string key)
         {
-
-            return _db.KeyExists(key);
+            return _database.KeyExists(key);
         }
 
+        /// <summary>
+        /// Removes the specified item from the cache.
+        /// </summary>
+        /// <param name="key"></param>
         public virtual void Remove(string key)
         {
-            //we should always persist the data protection key list
-            if (key.Equals(_config.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
-                return;
-
-            //remove item from caches
-            _db.KeyDelete(key);
+            if (!key.Equals(_redisSettings.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
+                _database.KeyDelete(key);
         }
 
+        /// <summary>
+        /// Removes items from the cache that match the specified prefix.
+        /// </summary>
+        /// <param name="prefix"></param>
         public virtual void RemoveByPrefix(string prefix)
         {
-
-            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            foreach (var endPoint in _redisConnectionWrapper.GetEndPoints())
             {
                 var keys = GetKeys(endPoint, prefix);
-
-                _db.KeyDelete(keys.ToArray());
+                _database.KeyDelete(keys.ToArray());
             }
         }
 
+        /// <summary>
+        /// Clears all cached items.
+        /// </summary>
         public virtual void Clear()
         {
-            foreach (var endPoint in _connectionWrapper.GetEndPoints())
+            foreach (var endPoint in _redisConnectionWrapper.GetEndPoints())
             {
                 var keys = GetKeys(endPoint).ToArray();
-
-                _db.KeyDelete(keys);
+                _database.KeyDelete(keys);
             }
         }
 
-        public virtual void Dispose()
+        /// <summary>
+        /// Disposes of the resources used by the <see cref="RedisCacheManager"/>.
+        /// </summary>
+        public void Dispose()
         {
-            if (_connectionWrapper != null)
-            {
-                _connectionWrapper.Dispose();
-            }
-            // Dispose(true);
-        }
-
-        private void Dispose(bool clear)
-        {
+            _redisConnectionWrapper?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
