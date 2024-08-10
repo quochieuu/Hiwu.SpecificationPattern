@@ -11,7 +11,7 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
     /// <summary>
     /// Manages the Redis connection and provides Redis-related operations, including distributed locking using RedLock.
     /// </summary>
-    public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
+    public class RedisConnectionWrapper : IRedisConnectionWrapper, IConnectionLocker
     {
         private readonly RedisSettings _redisSettings;
         private readonly object _connectionLock = new object();
