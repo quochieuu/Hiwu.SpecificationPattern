@@ -5,23 +5,25 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.SampleApi", "Hiwu.SpecificationPattern.SampleApi\Hiwu.SpecificationPattern.SampleApi.csproj", "{BBCF1672-3A63-421B-B28F-ADA752F913DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Domain", "Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj", "{A7155758-74E0-4B4C-B019-BC4335721098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Domain", "Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj", "{A7155758-74E0-4B4C-B019-BC4335721098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Shared", "Hiwu.SpecificationPattern.Shared\Hiwu.SpecificationPattern.Shared.csproj", "{D472588E-EFD1-4B4A-8B36-58223E0B0574}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Shared", "Hiwu.SpecificationPattern.Shared\Hiwu.SpecificationPattern.Shared.csproj", "{D472588E-EFD1-4B4A-8B36-58223E0B0574}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.SignalR", "Hiwu.SpecificationPattern.SignalR\Hiwu.SpecificationPattern.SignalR.csproj", "{957B14D8-365C-448A-915C-4C842A100938}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.SignalR", "Hiwu.SpecificationPattern.SignalR\Hiwu.SpecificationPattern.SignalR.csproj", "{957B14D8-365C-448A-915C-4C842A100938}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{88D7339B-D38A-4B61-BF55-6BC127D0EAA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Application", "Hiwu.SpecificationPattern.Application\Hiwu.SpecificationPattern.Application.csproj", "{3F357DE7-DBB5-458E-8405-EA09748945F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Application", "Hiwu.SpecificationPattern.Application\Hiwu.SpecificationPattern.Application.csproj", "{3F357DE7-DBB5-458E-8405-EA09748945F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Persistence", "Hiwu.SpecificationPattern.Persistence\Hiwu.SpecificationPattern.Persistence.csproj", "{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Persistence", "Hiwu.SpecificationPattern.Persistence\Hiwu.SpecificationPattern.Persistence.csproj", "{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{40F7A338-16C8-470E-A3B9-A34C8E401213}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Caching", "Hiwu.SpecificationPattern.Caching\Hiwu.SpecificationPattern.Caching.csproj", "{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hiwu.SpecificationPattern.Caching", "Hiwu.SpecificationPattern.Caching\Hiwu.SpecificationPattern.Caching.csproj", "{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Mongo", "Hiwu.SpecificationPattern.Mongo\Hiwu.SpecificationPattern.Mongo.csproj", "{13B70B64-7B67-4F67-9BF8-C3F54EA9C311}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13B70B64-7B67-4F67-9BF8-C3F54EA9C311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13B70B64-7B67-4F67-9BF8-C3F54EA9C311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13B70B64-7B67-4F67-9BF8-C3F54EA9C311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13B70B64-7B67-4F67-9BF8-C3F54EA9C311}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{3F357DE7-DBB5-458E-8405-EA09748945F5} = {88D7339B-D38A-4B61-BF55-6BC127D0EAA5}
 		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
 		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
+		{13B70B64-7B67-4F67-9BF8-C3F54EA9C311} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {009153D6-D923-4A27-881C-6F6042BD803F}
