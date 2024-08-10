@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{40F7A338-16C8-470E-A3B9-A34C8E401213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hiwu.SpecificationPattern.Caching", "Hiwu.SpecificationPattern.Caching\Hiwu.SpecificationPattern.Caching.csproj", "{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{957B14D8-365C-448A-915C-4C842A100938} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
 		{3F357DE7-DBB5-458E-8405-EA09748945F5} = {88D7339B-D38A-4B61-BF55-6BC127D0EAA5}
 		{AD6F3927-DA6B-47BC-9365-1BBE7BD87E75} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
+		{DA4CD0C9-A81A-4CAF-BBA3-A93B25FD0C80} = {DA7F6B62-5ACE-4AA2-9CA3-CA5E7A88966B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {009153D6-D923-4A27-881C-6F6042BD803F}

@@ -6,10 +6,10 @@ using Hiwu.SpecificationPattern.Persistence.Repositories;
 using Hiwu.SpecificationPattern.Application;
 using Hiwu.SpecificationPattern.SignalR;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
+using Hiwu.SpecificationPattern.Caching;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Threading.RateLimiting;
 using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,10 +68,10 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
                             builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Register repository
-builder.Services.AddApplicationServices();
+builder.Services.AddApplicationServices(builder.Configuration);
 
-// @TODO: remove later, use unit of work only
-builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+// Register caching
+builder.Services.AddCacheService(builder.Configuration);
 
 // Register signalr
 builder.Services.AddSignalRServices();

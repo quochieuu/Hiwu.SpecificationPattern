@@ -2,6 +2,7 @@
 using Hiwu.SpecificationPattern.Application.DataTransferObjects.Product;
 using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.Domain.Entities;
+using Hiwu.SpecificationPattern.SampleApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
@@ -24,6 +25,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
 
         [HttpGet]
         [Route("products")]
+        [Cached(2000)]
         public async Task<IActionResult> ProductsGet()
         {
             var result = await _unitOfWork.Repository<Product>().ListAllAsync();
