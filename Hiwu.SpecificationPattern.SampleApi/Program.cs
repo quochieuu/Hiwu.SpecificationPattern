@@ -68,7 +68,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
                             builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Register repository
-builder.Services.ApplyHiwuRepository<AppDbContext>();
+builder.Services.AddApplicationServices();
 
 // @TODO: remove later, use unit of work only
 builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));

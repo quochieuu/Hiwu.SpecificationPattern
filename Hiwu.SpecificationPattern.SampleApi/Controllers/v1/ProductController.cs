@@ -12,19 +12,21 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
 
-        public ProductController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductController(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
         [Route("products")]
         public async Task<IActionResult> ProductsGet()
         {
-            var result = await _unitOfWork.Repository.GetMultipleAsync<Product>(false);
+            var result = await _unitOfWork.Repository<Product>().ListAllAsync();
             return Ok(result);
         }
 
@@ -34,9 +36,9 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
         {
             var products = _mapper.Map<List<Product>>(productRequests);
 
-            var result = await _unitOfWork.Repository.AddRangeAsync(products);
+            var result = await _unitOfWork.Repository<Product>().AddRangeAsync(products);
 
-            await _unitOfWork.Repository.CompleteAsync();
+            await _unitOfWork.CompleteAsync();
             return Ok(result);
         }
 
@@ -44,7 +46,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
         [Route("product-w-category")]
         public async Task<IActionResult> ProductCategoriesGet()
         {
-            var result = await _unitOfWork.ProductRepository.GetProductsWithCategoryAsync();
+            var result = await _productRepository.GetProductsWithCategoryAsync();
             return Ok(result);
         }
 
@@ -52,7 +54,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
         [Route("products-price-range")]
         public async Task<IActionResult> GetProductsByPriceRange(decimal minPrice, decimal maxPrice)
         {
-            var products = await _unitOfWork.ProductRepository.GetProductsByPriceRangeAsync(minPrice, maxPrice);
+            var products = await _productRepository.GetProductsByPriceRangeAsync(minPrice, maxPrice);
             return Ok(products);
         }
 
