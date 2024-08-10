@@ -10,7 +10,7 @@ namespace Hiwu.SpecificationPattern.Caching.Redis
     /// <summary>
     /// Manages caching using Redis as the backend store.
     /// </summary>
-    public partial class RedisCacheManager : ICacheManager, IDisposable
+    public partial class RedisCacheManager : IRedisCacheManager, IDisposable
     {
         private readonly IRedisConnectionWrapper _redisConnectionWrapper;
         private readonly IDatabase _database;

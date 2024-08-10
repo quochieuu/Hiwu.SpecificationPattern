@@ -6,17 +6,18 @@ using System.Text;
 namespace Hiwu.SpecificationPattern.SampleApi.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class CachedAttribute : Attribute, IAsyncActionFilter
+    public class MemoryCachedAttribute : Attribute, IAsyncActionFilter
     {
         private readonly int _timeToLiveSeconds;
-        public CachedAttribute(int timeToLiveSeconds)
+
+        public MemoryCachedAttribute(int timeToLiveSeconds)
         {
             _timeToLiveSeconds = timeToLiveSeconds;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var cacheService = context.HttpContext.RequestServices.GetRequiredService<ICacheManager>();
+            var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCacheManager>();
 
             var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
             var cachedResponse = await cacheService.GetAsync(cacheKey);
@@ -34,7 +35,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Attributes
                 return;
             }
 
-            var executedContext = await next(); // move to controller
+            var executedContext = await next(); // Move to the controller action
 
             if (executedContext.Result is OkObjectResult okObjectResult)
             {
@@ -56,4 +57,5 @@ namespace Hiwu.SpecificationPattern.SampleApi.Attributes
             return keyBuilder.ToString();
         }
     }
+
 }

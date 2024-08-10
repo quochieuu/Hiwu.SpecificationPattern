@@ -25,7 +25,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
 
         [HttpGet]
         [Route("products")]
-        [Cached(2000)]
+        [RedisCached(2000)]
         public async Task<IActionResult> ProductsGet()
         {
             var result = await _unitOfWork.Repository<Product>().ListAllAsync();
@@ -46,6 +46,7 @@ namespace Hiwu.SpecificationPattern.SampleApi.Controllers.v1
 
         [HttpGet]
         [Route("product-w-category")]
+        [MemoryCached(200)]
         public async Task<IActionResult> ProductCategoriesGet()
         {
             var result = await _productRepository.GetProductsWithCategoryAsync();
