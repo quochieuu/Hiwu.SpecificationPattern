@@ -2,11 +2,12 @@ using Hiwu.SpecificationPattern.Application.Interfaces.Repositories;
 using Hiwu.SpecificationPattern.Core.Middlewares;
 using Hiwu.SpecificationPattern.Generic;
 using Hiwu.SpecificationPattern.Persistence.Database;
-using Hiwu.SpecificationPattern.Persistence.Repositories;
 using Hiwu.SpecificationPattern.Application;
 using Hiwu.SpecificationPattern.SignalR;
 using Hiwu.SpecificationPattern.SignalR.Hubs;
 using Hiwu.SpecificationPattern.Caching;
+using Hiwu.SpecificationPattern.Shared;
+using Hiwu.SpecificationPattern.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -78,6 +79,12 @@ builder.Services.AddSignalRServices();
 
 // Register core layer
 builder.Services.AddApplicationLayer();
+
+// Register shared layer
+builder.Services.AddSharedInfrastructure(builder.Configuration);
+
+// Register identity layer
+builder.Services.AddIdentityInfrastructure(builder.Configuration);
 
 // Register and configure API versioning in the ASP.NET Core service container
 builder.Services.AddApiVersioning(config =>

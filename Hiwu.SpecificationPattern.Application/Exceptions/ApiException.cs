@@ -16,5 +16,6 @@ namespace Hiwu.SpecificationPattern.Application.Exceptions
             : base(String.Format(CultureInfo.CurrentCulture, message, args))
         {
         }
+        public int StatusCode { get; set; }
     }
 }

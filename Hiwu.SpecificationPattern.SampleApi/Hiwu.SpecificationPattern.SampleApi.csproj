@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hiwu.SpecificationPattern.Caching\Hiwu.SpecificationPattern.Caching.csproj" />
     <ProjectReference Include="..\Hiwu.SpecificationPattern.Domain\Hiwu.SpecificationPattern.Domain.csproj" />
+    <ProjectReference Include="..\Hiwu.SpecificationPattern.Identity\Hiwu.SpecificationPattern.Identity.csproj" />
     <ProjectReference Include="..\Hiwu.SpecificationPattern.SignalR\Hiwu.SpecificationPattern.SignalR.csproj" />
   </ItemGroup>
 
